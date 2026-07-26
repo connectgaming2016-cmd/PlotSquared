@@ -1,0 +1,30 @@
+name: PlotSquared bauen
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Offiziellen Quellcode laden
+        uses: actions/checkout@v6
+        with:
+          repository: IntellectualSites/PlotSquared
+          ref: 7.5.13
+
+      - name: Java 21 einrichten
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: PlotSquared bauen
+        run: ./gradlew clean :plotsquared-bukkit:shadowJar -Pskip.signing
+
+      - name: Fertige Plugin-Datei bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlotSquared-7.5.13
+          path: Bukkit/build/libs/plotsquared-bukkit-7.5.13.jar
